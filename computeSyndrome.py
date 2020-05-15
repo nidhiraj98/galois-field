@@ -1,6 +1,10 @@
 import numpy as np
-n = 4
+n = 4   #GF(2^4)
+t = 2   #Error Correcting Capability
 GF = {}
+
+r = [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0] #Received Vector
+
 def generateField(n):
     GF[0] = 0b1
     for i in range(1, n):
@@ -27,7 +31,21 @@ def reducedForm(num):
             numGF ^= GF[i]
     return numGF
 
-a = 0b0101
-b = 0b1100
-generateField(n)
-print(fieldMul(a, b))
+def computeSyndrome(r, x):
+    h = []
+    for i in range(0, 2**n - 1):
+        h.append((x * i) % (2**n - 1))
+    
+    syndrome = 0
+    for i in range(0, len(r)):
+        if r[i] == 1:
+            syndrome = syndrome ^ GF[h[i]]
+    return syndrome
+
+def main():
+    generateField(n)
+    for i in range(2*t):
+        print(bin(computeSyndrome(r, i + 1)))
+
+if __name__ == "__main__":
+    main()
