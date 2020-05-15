@@ -1,22 +1,12 @@
 import numpy as np
 n = 4
-GF = {
-    0: 0b0001,
-    1: 0b0010,
-    2: 0b0100,
-    3: 0b1000,
-    4: 0b0011,
-    5: 0b0110,
-    6: 0b1100,
-    7: 0b1011,
-    8: 0b0101,
-    9: 0b1010,
-    10: 0b0111,
-    11: 0b1110,
-    12: 0b1111,
-    13: 0b1101,
-    14: 0b1001
-}
+GF = {}
+def generateField(n):
+    GF[0] = 0b1
+    for i in range(1, n):
+        GF[i] = GF[i - 1] << 1
+    for i in range(n, 2**n - 1):
+        GF[i] = GF[i - n] ^ GF[i - n + 1]   #Primitive Polynomial = x^4 = x + 1
 
 def fieldMul(a, b):
     p = 0b0
@@ -39,4 +29,5 @@ def reducedForm(num):
 
 a = 0b0101
 b = 0b1100
+generateField(n)
 print(fieldMul(a, b))
